@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from pymongo import MongoClient
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4bau2ke*v3kqm*=kkb1ifhfjk51^p_x7+2+67)8=&fu*ql-@8('
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'localhost',
+]
 
 # Application definition
 
@@ -37,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # project apps
+    'feedbacks',
 ]
 
 MIDDLEWARE = [
@@ -73,12 +80,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'feedback_db',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'sqlite.db',
+#     }
+# }
+
+# mongo_client = MongoClient(
+#     host=os.getenv('MONGO_DB_HOST', 'localhost'),
+#     port=int(os.getenv('MONGO_DB_PORT', 27017)),
+#     username=os.getenv('MONGO_DB_USERNAME', 'username'),
+#     password=os.getenv('MONGO_DB_PASSWORD', 'password'),
+#     authSource='admin'
+# )
+
+MONGO_DB_HOST = os.getenv('MONGO_DB_HOST', 'localhost')
+MONGO_DB_PORT = os.getenv('MONGO_DB_PORT', 27017)
+MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'dev')
+# MONGO_DB_USER = os.getenv('MONGO_DB_USERNAME', 'admin')
+# MONGO_DB_PASS = os.getenv('MONGO_DB_PASSWORD', 'password')
+
+# uri = "mongodb://{}:{}@{}:{}/{}".format(MONGO_DB_USER, MONGO_DB_PASS, MONGO_DB_HOST, MONGO_DB_PORT, MONGO_DB_NAME)
+mongo_client = MongoClient(
+    host=os.getenv('MONGO_DB_HOST', 'localhost'),
+    port=int(os.getenv('MONGO_DB_PORT', 27017)),
+)
+
+MONGO_DB = mongo_client[MONGO_DB_NAME]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -122,3 +151,31 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',  # Change to 'INFO' or 'ERROR' as needed
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
