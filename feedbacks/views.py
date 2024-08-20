@@ -7,8 +7,14 @@ mongo_service = MongoService()
 
 def feedback_data_view(request):
     feedback_data = mongo_service.get_feedback_data()
+
+    if not feedback_data:
+        # if no data exists we proceed to seed data/feedback.json into db
+        mongo_service.seed_feedback_data()
+        feedback_data = mongo_service.get_feedback_data()
+
     return JsonResponse({
-        "feedbacks": list(feedback_data)
+        "feedbacks": feedback_data
     })
 
 def branch_services_score_view(request):

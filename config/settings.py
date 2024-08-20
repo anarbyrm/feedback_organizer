@@ -88,28 +88,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 # }
 
-# mongo_client = MongoClient(
-#     host=os.getenv('MONGO_DB_HOST', 'localhost'),
-#     port=int(os.getenv('MONGO_DB_PORT', 27017)),
-#     username=os.getenv('MONGO_DB_USERNAME', 'username'),
-#     password=os.getenv('MONGO_DB_PASSWORD', 'password'),
-#     authSource='admin'
-# )
-
-MONGO_DB_HOST = os.getenv('MONGO_DB_HOST', 'localhost')
-MONGO_DB_PORT = os.getenv('MONGO_DB_PORT', 27017)
-MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'dev')
-# MONGO_DB_USER = os.getenv('MONGO_DB_USERNAME', 'admin')
-# MONGO_DB_PASS = os.getenv('MONGO_DB_PASSWORD', 'password')
-
-# uri = "mongodb://{}:{}@{}:{}/{}".format(MONGO_DB_USER, MONGO_DB_PASS, MONGO_DB_HOST, MONGO_DB_PORT, MONGO_DB_NAME)
-mongo_client = MongoClient(
-    host=os.getenv('MONGO_DB_HOST', 'localhost'),
-    port=int(os.getenv('MONGO_DB_PORT', 27017)),
-)
-
-MONGO_DB = mongo_client[MONGO_DB_NAME]
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -141,16 +119,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-# ]
-# STATIC_ROOT = os.path.join(BASE_DIR, 'public/static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
