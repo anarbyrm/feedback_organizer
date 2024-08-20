@@ -1,0 +1,136 @@
+[
+    {
+        "$unwind": "$feedback_rate"
+    },
+    {
+        "$group": {
+            "_id": {
+                "branch_name": "$branch.name",
+                "service_name": "$feedback_rate.service.name"
+            },
+            "countOf1": {
+                "$sum": {
+                    "$cond": {
+                        "if": {
+                            "$eq": ["$feedback_rate.rate_option", 1]
+                        },
+                        "then": 1,
+                        "else": 0
+                    }
+                }
+            },
+            "countOf2": {
+                "$sum": {
+                    "$cond": {
+                        "if": {
+                            "$eq": ["$feedback_rate.rate_option", 2]
+                        },
+                        "then": 1,
+                        "else": 0
+                    }
+                }
+            },
+            "countOf3": {
+                "$sum": {
+                    "$cond": {
+                        "if": {
+                            "$eq": ["$feedback_rate.rate_option", 3]
+                        },
+                        "then": 1,
+                        "else": 0
+                    }
+                }
+            },
+            "countOf4": {
+                "$sum": {
+                    "$cond": {
+                        "if": {
+                            "$eq": ["$feedback_rate.rate_option", 4]
+                        },
+                        "then": 1,
+                        "else": 0
+                    }
+                }
+            },
+            "countOf5": {
+                "$sum": {
+                    "$cond": {
+                        "if": {
+                            "$eq": ["$feedback_rate.rate_option", 5]
+                        },
+                        "then": 1,
+                        "else": 0
+                    }
+                }
+            }
+        }
+    },
+    {
+        "$group": {
+            "_id": {
+                "branch_name": "$_id.branch_name"
+            },
+            "services": {
+                "$push": {
+                    "name": "$_id.service_name",
+                    "score": {
+                        "$cond": {
+                            "if": {
+                                "$eq": [
+                                    {
+                                        "$sum": [
+                                            "$countOf1",
+                                            "$countOf2",
+                                            "$countOf3",
+                                            "$countOf4",
+                                            "$countOf5"
+                                        ]
+                                    }, 0
+                                ]
+                            },
+                            "then": 0,
+                            "else": {
+                                "$divide": [
+                                    {
+                                        "$multiply": [
+                                            {
+                                                "$sum": [
+                                                    {"$multiply": ["$countOf1", 10]},
+                                                    {"$multiply": ["$countOf2", 5]},
+                                                    {"$multiply": ["$countOf3", 0]},
+                                                    {"$multiply": ["$countOf4", -5]},
+                                                    {"$multiply": ["$countOf5", -10]}
+                                                ]
+                                            },
+                                            100
+                                        ]
+                                    },
+                                    {
+                                        "$multiply": [
+                                            {
+                                                "$sum": [
+                                                    "$countOf1",
+                                                    "$countOf2",
+                                                    "$countOf3",
+                                                    "$countOf4",
+                                                    "$countOf5"
+                                                ]
+                                            },
+                                            10
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    {
+        "$project": {
+          "branch_name": "$_id.branch_name",
+          "services": "$services"
+        }
+      }
+]

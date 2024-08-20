@@ -6,58 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback</title>
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
         table {
+            width: 100%;
             border-collapse: collapse;
-            width: 60%;
-            margin: auto;
         }
-
         th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd; /* Light border color */
             padding: 8px;
-            text-align: center;
+            text-align: left;
         }
-
-        caption {
-            font-size: 1.5em;
-            margin-bottom: 10px;
+        th {
+            background-color: #f0f0f0; /* Light grey for headers */
         }
-
-        tfoot td {
-            text-align: center;
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Alternating row color */
+        }
+        tr:nth-child(odd) {
+            background-color: #ffffff; /* White color for odd rows */
+        }
+        td[rowspan] {
+            border-left: 2px solid black; /* Bold left border for rowspan cells */
             font-weight: bold;
+        }
+        tbody tr:first-of-type {
+            border-top: 2px solid black; /* Bold top border for the first row of each branch */
+        }
+        tbody tr:last-of-type {
+            border-bottom: 2px solid black; /* Bold bottom border for the last row of each branch */
         }
     </style>
 </head>
 <body>
+    
     <table>
-        <caption>Feedback Table</caption>
         <thead>
             <tr>
-                <th>Branch name</th>
-                <th>Service name</th>
+                <th>Branch Name</th>
+                <th>Service Name</th>
                 <th>Score</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Row 1, Cell 1</td>
-                <td>Row 1, Cell 2</td>
-                <td>Row 1, Cell 3</td>
-            </tr>
-            <tr>
-                <td>Row 2, Cell 1</td>
-                <td>Row 2, Cell 2</td>
-                <td>Row 2, Cell 3</td>
-            </tr>
+            {% if success %}
+                {% for branch in result %}
+                    {% for service in branch.services %}
+                        <tr>
+                            {% if forloop.first %}
+                                <td rowspan="{{ branch.services|length }}">{{ branch.branch_name }}</td>
+                            {% endif %}
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.score }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        {{ error_message }}
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </body>

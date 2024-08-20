@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import (feedback_list_view,
-                    organize_feedback_view)
+from .views import (feedback_data_view,
+                    branch_services_score_view)
 
 urlpatterns = [
-    path('list/', feedback_list_view),
-    path('organize/', organize_feedback_view),
+    path('', feedback_data_view),
+    path('scores/', branch_services_score_view),
 ]
