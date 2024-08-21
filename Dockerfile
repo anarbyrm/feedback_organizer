@@ -9,16 +9,11 @@ COPY requirements.txt /app/
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY . /app/
-
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY . /app
 
 RUN useradd -m django_user
 USER django_user
 
 EXPOSE 8000
-
-ENTRYPOINT ["/app/entrypoint.sh"]
 
 CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
