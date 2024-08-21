@@ -65,11 +65,13 @@ Final result looks like this:
 
 ### MongoDB integration to project
 
-Django ORM does not support NoSQL databases. There is various packages to connect a project to mongodb. One of the famous ones is Djongo. The reason it is not used in the project is it does not allow to do complex queries and it is not stable because project is not maintained anymore. Pymongo is mongodb adapter allows us to leveradge all functionalities of mongodb. The downside of this package is that it is not possible to follow the traditional connection settings opinions for django. So I created MongoService class to handle the connection. It also have some methods to perform operations on db. These methods helps to separate business logic from views and makes it more readable as well.
+Django ORM does not support NoSQL databases. There is various packages to connect a django project to mongodb. One of the famous ones is Djongo. The reason it is not used in the project is it does not allow to do complex queries and it is not stable because project is not maintained anymore.
+
+In this project pymongo package is used. Pymongo is mongodb adapter allows us to leveradge all functionalities of mongodb. The downside of this package is that it is not possible to follow the traditional connection settings opinions for django. So I have created MongoService class to handle the connection. It also have some methods to perform operations on db. These methods helps to separate business logic from views and makes it more readable as well.
 
 
 ###  Usage of MongoDB queries on views
-For views MongoService class initialized and used to fetch data.
+For views MongoService class initialized and used to fetch required data.
 
 
 ## Setup
