@@ -10,8 +10,9 @@ def feedback_data_view(request):
 
     if not feedback_data:
         # if no data exists we proceed to seed data/feedback.json into db
-        mongo_service.seed_feedback_data()
-        feedback_data = mongo_service.get_feedback_data()
+        result = mongo_service.seed_feedback_data()
+        if result:
+            feedback_data = mongo_service.get_feedback_data()
 
     return JsonResponse({
         "feedbacks": feedback_data
@@ -31,4 +32,4 @@ def branch_services_score_view(request):
             "error_message": exc
         })
 
-    return render(request, 'feedback_table.html', context)
+    return render(request, 'feedbacks/scores_table.html', context)

@@ -2,17 +2,17 @@
 
 ## Introduction
 
-The project is aimed to perform specified aggregation operations on mongodb and retrieve the relevant data from it.
+The project is aimed to perform aggregation operations for specified data on mongodb, retrieve the result and present the aggregated data in table structure.
 
 ### Tech stack
 
-It is build on the top of Python, Django, MongoDB and Docker. Connection with MongoDB is established with pymongo adapter.
+It is build on the top of **Python, Django, MongoDB** and **Docker**. Connection with MongoDB is established with pymongo adapter.
 
 ### URLs
 
-http://localhost:8000/feedbacks - feedback data if exists or it seeds db with data.
+http://localhost:8000/feedbacks - retrieves json feedback data if exists in db or it seeds db with data then fetches it.
 
-http://localhost:8000/feedbacks/scores - fetches all data aggregated based on pipelines.
+http://localhost:8000/feedbacks/scores - fetches all aggregated data based on pipelines adn presents it in table form.
 
 
 ## Development Stages

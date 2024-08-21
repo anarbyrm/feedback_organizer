@@ -47,41 +47,41 @@ class MongoService:
         """
         current_dir = os.path.dirname(__file__)
         file_path = os.path.join(current_dir, relative_path)
-        file_path = os.path.abspath(file_path)
-        return file_path
+        absolute_file_path = os.path.abspath(file_path)
+        return absolute_file_path
 
     def get_branch_services_scores_data(self):
         """
         Fetches score data based on aggregation pipelines.
         Returns list of dictionaries (with the keys "brach_name", "services")
         """
-        file_path = self._get_file_path(PIPELINE_FILE_RELATIVE_PATH)
-        pipelines  = self._get_json_file_content(file_path)
+        absolute_file_path = self._get_file_path(PIPELINE_FILE_RELATIVE_PATH)
+        pipelines  = self._get_json_file_content(absolute_file_path)
         feedback_collection = self.get_collection(FEEDBACK_COLLECTION_NAME)
         result = list(feedback_collection.aggregate(pipelines))
         return result
     
-    def _get_json_file_content(self, file_path):
+    def _get_json_file_content(self, absolute_file_path):
         """
         Reads the json file in the given location and
         returns native python content data of the file
         """
-        with open(file_path, "r") as file:
+        with open(absolute_file_path, "r") as file:
             content = file.read()
             data = json.loads(content)
             return data
 
-    def seed_data(self, collection_name):
+    def seed_data(self, relative_file_path, collection_name):
         """
         Inserts many documents to the specified collection in one go
         """
-        file_path = self._get_file_path(SEEDING_FILE_RELATIVE_PATH)
-        data = self._get_json_file_content(file_path)
+        absolute_file_path = self._get_file_path(relative_file_path)
+        data = self._get_json_file_content(absolute_file_path)
         collection = self.get_collection(collection_name)
-        collection.insert_many(data)
+        return collection.insert_many(data)
 
     def seed_feedback_data(self):
         """
         Insert many documents into feedback collection
         """
-        self.seed_data(FEEDBACK_COLLECTION_NAME)
+        return self.seed_data(SEEDING_FILE_RELATIVE_PATH, FEEDBACK_COLLECTION_NAME)
